@@ -4,23 +4,20 @@ This vimrc file that contains a minimum of plug-ins.
 
 ### Installation
 
-1. Install Vim-plug
+1. Install Vim-plug  
 [vim-plug](https://github.com/junegunn/vim-plug)  
 This vimrc using vim-plug(plugin manager).
 
-1. Clone This Repo.
+1. Clone
+Clone This Repo.
+  ```
+  $ git clone https://github.com/kamiya555/vimrc
+  $ cd vimrc
+  $ mv .vimrc ~
+  ```
 
-```
-$ git clone https://github.com/kamiya555/vimrc
-$ cd vimrc
-$ mv .vimrc ~
-```
-1. To start the Vim And please run the command.
-
-```
-:PlugInstall
-```
-Contained plug-ins are installed. Then, restart the vim.
+1. To start the Vim And please run the command.  
+  `:PlugInstall` Contained plug-ins are installed. Then, restart the vim.
 
 ### Plugins
 
