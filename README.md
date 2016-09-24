@@ -2,7 +2,14 @@
 
 This vimrc file that contains a minimum of plug-ins.
 
-### Install
+### Installation
+
+1. Install Vim-plug
+[vim-plug](https://github.com/junegunn/vim-plug)  
+This vimrc using vim-plug(plugin manager).
+
+1. Clone This Repo.
+
 ```
 $ git clone https://github.com/kamiya555/vimrc
 $ cd vimrc
