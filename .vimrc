@@ -1,7 +1,6 @@
 " システム設定"{{{
 set nocompatible
-
-"set shell=zsh
+set shell=zsh
 
 " 言語設定
 let $LANG='en'
@@ -25,8 +24,6 @@ set t_Co=256
 set t_ut=
 set t_u7=
 set t_RV=
-set visualbell t_vb=
-set noerrorbells 
 
 " ワイルドメニューを有効化
 set wildmenu
@@ -34,12 +31,6 @@ set wildmenu
 " バックアップファイルを作らない
 set nobackup
 set nowb
-
-" Undo
-if has("persistent_undo")
-  set undodir=$HOME/.vim/undodir
-  set undofile
-endif
 
 " スワップファイルを作らない
 set noswapfile
@@ -50,7 +41,11 @@ set noautochdir
 " <leader>キーをスペースに設定
 let mapleader = "\<Space>"
 
-filetype plugin indent on
+" プラグイン有効化
+filetype plugin on
+
+" インデント有効化
+filetype indent on
 
 " 折り返さない
 set nowrap
@@ -72,7 +67,6 @@ set shellslash
 
 " 遅延描画を有効化
 set lazyredraw
-set ttyfast
 
 " 変更履歴の保存数
 set history=500
@@ -80,19 +74,7 @@ set history=500
 " ペースト時にレジスタを書き換えない
 vnoremap <silent>p "0p
 
-set list
-if has('multi_byte') && &encoding ==# 'utf-8'
-  let &listchars = 'tab:▸ ,extends:❯,precedes:❮,nbsp:±'
-else
-  let &listchars = 'tab:> ,extends:>,precedes:<,nbsp:.'
-endif
-
 " }}}
-
-" インクリメント、デクリメント"{{{
-nnoremap + <C-a>
-nnoremap - <C-x>
-"}}}
 
 " 検索設定"{{{
 
@@ -109,6 +91,9 @@ set incsearch
 
 " ハイライト検索を使用する
 set hlsearch
+
+" ハイライトを消す
+nnoremap <silent><ESC> :nohl<CR>
 
 " ビジュアルモードでの検索
 vnoremap * "zy:let @/ = @z<CR>n
@@ -140,25 +125,7 @@ if has("autocmd")
 endif
 "}}}
 
-" コマンドラインモードのキーバインド設定"{{{
-"cnoremap <C-A> <Home>
-"cnoremap <C-E> <End>
-"cnoremap <C-F> <Right>
-"cnoremap <C-B> <Left>
-
-cnoremap <C-P> <Up>
-cnoremap <C-N> <Down>
-"}}}
-
-" 画面分割関連の設定 "{{{
-
-" Shift+Allowでウィンドウサイズ変更
-nnoremap <S-Left>  5<C-w><<CR>
-nnoremap <S-Right> 5<C-w>><CR>
-nnoremap <S-Up>    5<C-w>-<CR>
-nnoremap <S-Down>  5<C-w>+<CR>
-
-" ウィンドウ移動
+" ウィンドウ移動設定"{{{
 nnoremap <Down>  <C-W>j
 nnoremap <Up>    <C-W>k
 nnoremap <Left>  <C-W>h
@@ -170,23 +137,16 @@ nnoremap <C-h>   <C-W>h
 nnoremap <C-l>   <C-W>l
 "}}}
 
-" スクロール関連設定 "{{{
+" スクロール、ページ移動設定"{{{
+nnoremap <C-e> 5<C-e>
+nnoremap <C-y> 5<C-y>
 
-" 縦スクロール
-nnoremap <C-e> 8<C-e>
-nnoremap <C-y> 8<C-y>
-
-" 上下の余白
+" スクロール次の画面上下の余白を設定
 set scrolloff=3
 
 " ページ移動時にカーソルを中央に表示
 nnoremap <C-f> <C-f>zz
 nnoremap <C-b> <C-b>zz
-
-" 横スクロール
-nnoremap zl 30zl
-nnoremap zh 30zh
-
 "}}}
 
 " タブ移動設定"{{{
@@ -236,13 +196,7 @@ nnoremap <leader>zc zM<cr> " すべての折りたたみを閉じる
 " GVim用設定"{{{
 if has("gui_running")
   " フォント設定
-  if has('mac') " for mac
-    set guifont=Roboto\ Mono\ for\ Powerline:h11
-  elseif has('unix') " for Unix
-    " TODO
-  elseif has('win32') " for Win
-    set guifont=Ricty_Diminished:h10:cSHIFTJIS
-  end
+  set guifont=Roboto\ Mono\ for\ Powerline:h11
 
   " メニューを非表示
   set guioptions-=m
@@ -302,135 +256,32 @@ nnoremap <C-z> <Nop>
 nnoremap <C-q> <Nop>
 "}}}
 
-" vimrcの編集"{{{
-command! Evimrc e $MYVIMRC
-augroup source-vimrc
-  autocmd!
-  autocmd BufWritePost *vimrc source $MYVIMRC
-augroup END
-"}}}
-
-" *** Plugins Definition *** {{{
+" Plugins {{{
 call plug#begin('~/.vim/plugged')
-  " [file management with ext] "{{{
   Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTree'] }
   Plug 'scrooloose/nerdcommenter'
-  Plug 'ctrlpvim/ctrlp.vim',
-  Plug 'kassio/ctrlp-bufline.vim', { 'on' : ['CtrlPBufLine'] }
-  Plug 'tacahiroy/ctrlp-funky',    { 'on' : ['CtrlPFunky'] }
-  "}}}
-
-  " [status line] "{{{
+  Plug 'ctrlpvim/ctrlp.vim'
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
-  "}}}
-
-  " [search] "{{{
   Plug 'haya14busa/incsearch.vim'
-  Plug 'osyo-manga/vim-anzu'
-  "}}}
-
-  " [syntax/completion] "{{{
+  Plug 'flazz/vim-colorschemes'
+  Plug 'drmikehenry/vim-fontsize'
+  Plug 'terryma/vim-expand-region'
+  Plug 'adonis0147/prettyGuides'
+  Plug 'terryma/vim-multiple-cursors'
+  Plug 'mhinz/vim-startify'
+  Plug 'kana/vim-submode'
+  Plug 'tpope/vim-surround'
+  Plug 'easymotion/vim-easymotion'
+  Plug 'junegunn/vim-easy-align'
+  Plug 'kien/rainbow_parentheses.vim'
+  Plug 'bronson/vim-trailing-whitespace'
   Plug 'Shougo/neocomplete.vim'
   Plug 'Shougo/neosnippet'
   Plug 'Shougo/neosnippet-snippets'
-  "}}}
-
-  " [disp util] "{{{
-  Plug 'osyo-manga/vim-brightest'
-  Plug 'kien/rainbow_parentheses.vim'
-  Plug 'thinca/vim-zenspace'
-
-  Plug 'adonis0147/prettyGuides', { 'on' : 'PrettyGuidesEnable' }
-  Plug 'nathanaelkane/vim-indent-guides'
-  "}}}
-
-  " [Editing] "{{{
-  Plug 'tpope/vim-surround'
-  Plug 'terryma/vim-expand-region'
-  Plug 'terryma/vim-multiple-cursors'
-  Plug 'bronson/vim-trailing-whitespace'
-  Plug 'tpope/vim-endwise'
-  "}}}
-
-  " [Align] "{{{
-  Plug 'Align'
-  Plug 'junegunn/vim-easy-align'
-  "}}}
-
-  " [motion] "{{{
-  Plug 'easymotion/vim-easymotion'
-  Plug 'tmhedberg/matchit'
-  "}}}
-
-  " [splash] "{{{
-  Plug 'mhinz/vim-startify'
-  "}}}
-
-  " [additional mode] "{{{
-  Plug 'kana/vim-submode'
-  "}}}
-
-  " [ctags] "{{{
-  Plug 'godlygeek/tabular'
-  "}}}
-
-  " [VCS]"{{{
   Plug 'mhinz/vim-signify'
-  "}}}
-
-  " [marks] "{{{
   Plug 'kshenoy/vim-signature'
-  "}}}
-
-  " [undo management] "{{{
-  Plug 'mbbill/undotree'
-  "}}}
-
-  " [buffer management] "{{{
-  Plug 'mhinz/vim-sayonara', { 'on': 'Sayonara' }
-  "}}}
-
-  " [calendar] "{{{
-  Plug 'itchyny/calendar.vim'
-  "}}}
-
-  " [colorscheme] "{{{
-  Plug 'flazz/vim-colorschemes'
-  Plug 'chriskempson/base16-vim'
-  Plug 'morhetz/gruvbox'
-  "}}}
-
-  " [language specific] "{{{
-
-  " * javascript "{{{
-  Plug '1995eaton/vim-better-javascript-completion'
-  Plug 'othree/jspc.vim'
-  Plug 'jelera/vim-javascript-syntax', { 'for': ['Javascript'] }
-  Plug 'maksimr/vim-jsbeautify' " beatifier
-  " Plug 'othree/yajs.vim', { 'for': 'javascript' }
-  " Plug 'heavenshell/vim-jsdoc'
-  " Plug 'itspriddle/vim-jquery'
-  " Plug 'othree/javascript-libraries-syntax.vim'
-  " Plug 'mxw/vim-jsx'
-  "}}}
-
-  " * haml
-  Plug 'tpope/vim-haml'
-
-  " * markdown
-  Plug 'plasticboy/vim-markdown'
-
-  " * json
-  Plug 'elzr/vim-json'
-
-  "}}}
-
-  " [uncategorized] "{{{
-  Plug 'ervandew/supertab'
-  Plug 'mopp/layoutplugin.vim', { 'on' : 'LayoutPlugin'}
-  "}}}
-
+  Plug 'thinca/vim-zenspace'
 call plug#end()
 
 let s:plug = {
@@ -440,30 +291,25 @@ function! s:plug.is_installed(name)
   return has_key(self.plugs, a:name) ? isdirectory(self.plugs[a:name].dir) : 0
 endfunction
 
-"}}}
-
-" *** Plugins Config ***"{{{
-
-" colorscheme設定 {{{
-set background=dark
-try
-  "colorscheme molokai
-  "colorscheme base16-default-dark
-  "colorscheme base16-tomorrow-night
-  "colorscheme base16-monokai
-  "colorscheme solarized
-  colorscheme hybrid
-  "colorscheme gruvbox
-  "colorscheme base16-monokai
-  "colorscheme base16-solarized-light
-catch
-  echo 'Does not exist specified colorscheme.'
-endtry
+" colorscheme {{{
+if s:plug.is_installed('vim-colorschemes')
+  set background=dark
+  try
+    "colorscheme molokai
+    "colorscheme base16-default-dark
+    "colorscheme base16-tomorrow-night
+    "colorscheme base16-monokai
+    "colorscheme solarized
+    colorscheme hybrid
+  catch
+    echo 'Does not exist specified colorscheme.'
+  endtry
+end
 "}}}
 
 " neocompleteの設定 "{{{
 if s:plug.is_installed('neocomplete.vim')
-  let g:acp_enableAtStartup = 1
+  let g:acp_enableAtStartup = 0
   " Use neocomplete.
   let g:neocomplete#enable_at_startup = 1
   " Use smartcase.
@@ -474,10 +320,10 @@ if s:plug.is_installed('neocomplete.vim')
 
   " Define dictionary.
   let g:neocomplete#sources#dictionary#dictionaries = {
-      \ 'default'  : '',
+      \ 'default' : '',
       \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'scheme'   : $HOME.'/.gosh_completions'
-      \ }
+      \ 'scheme' : $HOME.'/.gosh_completions'
+          \ }
 
   " Define keyword.
   if !exists('g:neocomplete#keyword_patterns')
@@ -504,6 +350,15 @@ if s:plug.is_installed('neocomplete.vim')
   inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
   " Close popup by <Space>.
   "inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+  " AutoComplPop like behavior.
+  "let g:neocomplete#enable_auto_select = 1
+
+  " Shell like behavior(not recommended).
+  "set completeopt+=longest
+  "let g:neocomplete#enable_auto_select = 1
+  "let g:neocomplete#disable_auto_complete = 1
+  "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
   " Enable omni completion.
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -588,7 +443,7 @@ endif
 " ctrlp の設定 {{{
 if s:plug.is_installed('ctrlp.vim')
   " 動作パスモードを設定
-  "let g:ctrlp_working_path_mode = 'ra'
+  let g:ctrlp_working_path_mode = 'ra'
 
   " for MacOSX/Linux
   set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/vendor/*
@@ -605,7 +460,6 @@ if s:plug.is_installed('ctrlp.vim')
   let g:ctrlp_lazy_update = 2
 
   " ルートパスと認識させるためのファイル
-  " gemfileあたりはvendor/bundle以下にも存在する可能性があるので要注意
   let g:ctrlp_root_markers = ['Gemfile', 'pom.xml', 'build.xml']
 
   " CtrlPのウィンドウ最大高さ
@@ -617,11 +471,6 @@ if s:plug.is_installed('ctrlp.vim')
     \ 'file': '\v\.(exe|so|dll)$',
     \ 'link': 'some_bad_symbolic_links',
     \ }
-
-  nmap <leader>b :CtrlPBuffer<cr>
-  nmap <leader>l :CtrlPBufLine<cr>
-  nmap <leader>f :CtrlPFunky<cr>
-
 end
 "}}}
 
@@ -643,12 +492,6 @@ if s:plug.is_installed('incsearch.vim')
   map /  <Plug>(incsearch-forward)
   map ?  <Plug>(incsearch-backward)
   map g/ <Plug>(incsearch-stay)
-
-  map n <Plug>(incsearch-nohl)<Plug>(anzu-n-with-echo)
-  map N <Plug>(incsearch-nohl)<Plug>(anzu-N-with-echo)
-
-  "set statusline=%{anzu#search_status()}
-  nmap <silent><Esc> :nohl<cr><Plug>(anzu-clear-search-status)
 end
 "}}}
 
@@ -661,29 +504,10 @@ end
 
 " rainbow parenthesesの設定 "{{{
 if s:plug.is_installed('rainbow_parentheses.vim')
-  au VimEnter * RainbowParenthesesToggle
-  au Syntax   * RainbowParenthesesLoadRound
-  au Syntax   * RainbowParenthesesLoadSquare
-  au Syntax   * RainbowParenthesesLoadBraces
-
-  let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue1'],
-    \ ['Darkblue',    'SeaGreen1'],
-    \ ['darkgray',    'DarkOrchid1'],
-    \ ['darkgreen',   'firebrick1'],
-    \ ['darkcyan',    'RoyalBlue1'],
-    \ ['darkred',     'SeaGreen1'],
-    \ ['darkmagenta', 'DarkOrchid1'],
-    \ ['brown',       'firebrick1'],
-    \ ['gray',        'RoyalBlue1'],
-    \ ['black',       'SeaGreen1'],
-    \ ['darkmagenta', 'DarkOrchid1'],
-    \ ['Darkblue',    'firebrick1'],
-    \ ['darkgreen',   'RoyalBlue1'],
-    \ ['darkcyan',    'SeaGreen1'],
-    \ ['darkred',     'DarkOrchid1'],
-    \ ['red',         'firebrick1'],
-    \ ]
+  "au VimEnter * RainbowParenthesesToggle
+  "au Syntax * RainbowParenthesesLoadRound
+  "au Syntax * RainbowParenthesesLoadSquare
+  "au Syntax * RainbowParenthesesLoadBraces
 end
 "}}}
 
@@ -692,41 +516,6 @@ if s:plug.is_installed('vim-zenspace')
   let g:zenspace#default_mode = 'on'
 end
 "}}}
-
-" vim-brightestの設定"{{{
-if s:plug.is_installed('vim-brightest')
-  let g:brightest#highlight = {
-  \   "group" : "BrightestUnderline"
-  \}
-end
-"}}}
-
-" supertabの設定"{{{
-if s:plug.is_installed('supertab')
-  let g:SuperTabDefaultCompletionType = "<c-n>"
-end
-"}}}
-
-" undotreeの設定
-if s:plug.is_installed('undotree')
-  nnoremap u g-
-  nnoremap <C-r> g+
-  nnoremap <F5> :UndotreeToggle<cr>
-  let g:undotree_WindowLayout=4
-end
-
-" prettyGuidesの設定"{{{
-if s:plug.is_installed('prettyGuides')
-  let g:PrettyGuidesGuiColor = 'Gray'
-end
-"}}}
-
-" vim-indent-guides の設定
-if s:plug.is_installed('vim-indent-guides')
-  let g:indent_guides_color_change_percent = 1
-  let g:indent_guides_enable_on_vim_startup = 1
-  let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'startify']
-end
 
 "}}}
 
